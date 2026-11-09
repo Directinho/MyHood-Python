@@ -137,10 +137,6 @@ def consultarPedido():
                     print(f"Status: {pedido.get('status', 'N/A')}\n")
         except Exception:
             print("Nenhum pedido foi cadastrado ainda.")
-
-    input("\nAperte qualquer tecla para voltar ao menu...")
-    cidadao()
-
     input("\nAperte qualquer tecla para voltar ao menu...")
     cidadao()
 

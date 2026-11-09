@@ -3,8 +3,7 @@ import sys
 import os
 
 
-grupo = ["Gabriela do Rozario", "Henrique Luiz", "João Vitor", "Lucas Salvador", "Milenna de Moraes"]
-
+grupo = ("Gabriela do Rozario", "Henrique Luiz", "João Vitor", "Lucas Salvador", "Milenna de Moraes")
 erro = "Opção desconhecida"
 
 
@@ -39,21 +38,21 @@ def main():
     limpar()
     print("MyBairro \n\n1- Entrar como Cidadao \n2- Entrar como Administrador \n3- Ver Grupo\n4- Sair do Sistema\n")
     opcao = input("Insira uma opção: ")
-    if opcao == "1":  
-        opcao1()
-    elif opcao == "2":
-        opcao2()
-    elif opcao == "3":
-        limpar()
-        integrantes()
-        
 
-    elif opcao == "4":
-        limpar()
-        print("Fechando programa...")
-
-    else:
-        print(erro)
+    match opcao:
+        case "1":
+            opcao1()
+        case "2":
+            opcao2()
+        case "3":
+            integrantes()
+        case "4":
+            print("Saindo do sistema...")
+            sys.exit(0)
+        case _:
+            print(erro)
+            input("Aperte Enter para tentar novamente...")
+            main()
 
 
 

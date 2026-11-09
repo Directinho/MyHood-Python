@@ -1,6 +1,121 @@
 import json
 from main import limpar
-from cidadao import consultarPedido ,voltarMenu
+from cidadao import consultarPedido, voltarMenu
+
+
+def ler_campo(mensagem, tipo=str, valor_atual=None):
+    while True:
+        valor = input(mensagem).strip()
+
+        if valor.lower() == "voltar":
+            return "voltar"
+
+        if valor.lower() == "pular" or valor == "":
+            return valor_atual
+
+        if tipo == int:
+            try:
+                return int(valor)
+            except ValueError:
+                print("Entrada inválida. Digite apenas números.")
+                continue
+
+        return valor
+
+
+def editarPedido():
+    limpar()
+    print("Editar Pedido\n")
+    print("Digite 'voltar' a qualquer momento para cancelar.\n")
+
+    try:
+        with open("pedidos.json", "r", encoding="utf-8") as f:
+            pedidos = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        pedidos = []
+
+    if not pedidos:
+        print("Não há pedidos cadastrados ainda.")
+        input("\nAperte Enter para voltar ao menu do administrador...")
+        admin()
+        return
+
+    pedido_id = ler_campo("Digite o ID do pedido: ", tipo=int)
+
+    if pedido_id == "voltar":
+        admin()
+        return
+
+    if not (1 <= pedido_id <= len(pedidos)):
+        print(f"\nID {pedido_id} não encontrado. Os IDs válidos vão de 1 a {len(pedidos)}.")
+        input("Aperte Enter para tentar novamente...")
+        editarPedido()
+        return
+
+    pedido = pedidos[pedido_id - 1]
+
+    limpar()
+    print(f"Editando Pedido de id: {pedido_id} ===\n")
+    print(f"Nome atual: {pedido.get('nome')}")
+    print(f"CPF atual: {pedido.get('cpf')}")
+    print(f"Nível atual: {pedido.get('nivel')}")
+    print(f"Pedido atual: {pedido.get('pedido')}")
+    print(f"CEP atual: {pedido.get('cep')}")
+    print(f"Cidade atual: {pedido.get('cidade')}")
+    print(f"Status atual: {pedido.get('status')}")
+    print("\nDigite o novo valor ou 'pular' (ou Enter) para manter o atual.\n")
+
+    nome = ler_campo(f"Novo nome [{pedido.get('nome')}]: ", valor_atual=pedido.get("nome"))
+    if nome == "voltar":
+        admin()
+        return
+
+    cpf = ler_campo(f"Novo CPF [{pedido.get('cpf')}]: ", valor_atual=pedido.get("cpf"))
+    if cpf == "voltar":
+        admin()
+        return
+
+    nivel = ler_campo(f"Novo nível (1-5) [{pedido.get('nivel')}]: ", tipo=int, valor_atual=pedido.get("nivel"))
+    if nivel == "voltar":
+        admin()
+        return
+
+    pedido_texto = ler_campo(f"Novo pedido [{pedido.get('pedido')}]: ", valor_atual=pedido.get("pedido"))
+    if pedido_texto == "voltar":
+        admin()
+        return
+
+    cep = ler_campo(f"Novo CEP [{pedido.get('cep')}]: ", valor_atual=pedido.get("cep"))
+    if cep == "voltar":
+        admin()
+        return
+
+    cidade = ler_campo(f"Nova cidade [{pedido.get('cidade')}]: ", valor_atual=pedido.get("cidade"))
+    if cidade == "voltar":
+        admin()
+        return
+
+    status = ler_campo(f"Novo status [{pedido.get('status')}]: ", valor_atual=pedido.get("status"))
+    if status == "voltar":
+        admin()
+        return
+
+    pedidos[pedido_id - 1] = {
+        "nome": nome,
+        "cpf": cpf,
+        "nivel": nivel,
+        "pedido": pedido_texto,
+        "cep": cep,
+        "cidade": cidade,
+        "status": status
+    }
+
+    with open("pedidos.json", "w", encoding="utf-8") as f:
+        json.dump(pedidos, f, indent=4, ensure_ascii=False)
+
+    print(f"\nPedido de id: {pedido_id} atualizado com sucesso!")
+    input("Aperte Enter para voltar ao menu do administrador...")
+    admin()
 
 
 def definirStatus():
@@ -19,19 +134,6 @@ def definirStatus():
         input("\nAperte Enter para voltar ao menu do administrador...")
         admin()
         return
-
-    def ler_campo(mensagem, tipo=str):
-        while True:
-            valor = input(mensagem).strip()
-            if valor.lower() == "voltar":
-                return "voltar"
-            if tipo == int:
-                try:
-                    return int(valor)
-                except ValueError:
-                    print("Entrada inválida. Digite apenas números.")
-                    continue
-            return valor
 
     pedido_id = ler_campo("Digite o ID do pedido: ", tipo=int)
 
@@ -89,11 +191,16 @@ def admin():
     limpar()
     print("Bem-vindo ao Sistema do Administrador")
     print(
-        "\nO que deseja fazer?\n1- Editar Pedidos\n2- Definir Status de Pedidos\n3- Checar Lista de Pedidos\n4- Voltar para o menu principal\n"
+        "\nO que deseja fazer?\n"
+        "1- Editar Pedidos\n"
+        "2- Definir Status de Pedidos\n"
+        "3- Checar Lista de Pedidos\n"
+        "4- Voltar para o menu principal\n"
     )
     opcao = input("Insira uma opção: ")
+
     if opcao == "1":
-        pass 
+        editarPedido()
     elif opcao == "2":
         definirStatus()
     elif opcao == "3":
