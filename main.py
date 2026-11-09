@@ -36,7 +36,7 @@ def continuar():
     main() 
 def main():
     limpar()
-    print("MyBairro \n\n1- Entrar como Cidadao \n2- Entrar como Administrador \n3- Ver Grupo\n4- Sair do Sistema\n")
+    print("MyHood \n\n1- Entrar como Cidadao \n2- Entrar como Administrador \n3- Ver Grupo\n4- Sair do Sistema\n")
     opcao = input("Insira uma opção: ")
 
     match opcao:
